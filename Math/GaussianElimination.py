@@ -192,13 +192,12 @@ def solve_1():
         return nullspace_basis
 
 
-    A = np.array([[-1, 4, 3], [1, 5, 3], [1, -1, -1],[-1,-2,-1],[2,7,4]]).T
-    print(kernel_basis(A))
-    def sol_s10():
 
-        A = np.array([[-1, 4, 3], [1, 5, 3], [1, -1, -1],[-1,-2,-1],[2,7,4]]).T
-        res = {}
-        res["image"] = image_basis(A)
+    A = np.array([[-1, 4, 3], [1, 5, 3], [1, -1, -1],[-1,-2,-1],[2,7,4]]).T
+    res = {}
+    res["image"] = image_basis(A)
+    res["kernel"] = kernel_basis(A)
+    return res
 
 
 # Problem2:
