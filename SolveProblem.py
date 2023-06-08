@@ -10,6 +10,7 @@ class AlgebraProblem:
         self.surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
         # Chosing what algebra tast to display
+        # There is some problem with problem 6
         self.number_task = random.randint(1, 8)
         self.picture =  pygame.image.load("Math/problems/Problem{0}.png".format(self.number_task))
         #self.picture = pygame.transform.scale(self.picture, (WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -20,9 +21,9 @@ class AlgebraProblem:
 
         # Create buttons for each game option
         self.button1 = Button(self.surface, "Correct", 60, "white" ,
-                              WINDOW_WIDTH/2, WINDOW_HEIGHT/2 - 50)
+                              WINDOW_WIDTH/2 - 100, WINDOW_HEIGHT - 80)
         self.button2 = Button(self.surface, "Wrong", 60, "white" ,
-                               WINDOW_WIDTH/2, WINDOW_HEIGHT/2 + 80)
+                               WINDOW_WIDTH/2 +100, WINDOW_HEIGHT - 80)
 
         self.selected_game = None  # Initialize selected game to None
         self.popup_visible = False  # Flag to control popup visibility
@@ -55,7 +56,7 @@ class AlgebraProblem:
             self.hello_label.draw(self.surface)
             self.button1.draw()
             self.button2.draw()
-            self.surface.blit(self.picture,(100,  200))
+            self.surface.blit(self.picture,(60,  200))
             pygame.display.flip()
 
 
