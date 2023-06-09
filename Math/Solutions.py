@@ -125,14 +125,14 @@ def solve_4():
 
 
 
-def solve_5():
+def solve_5(): # Will show the picture with the solution, because the result numbers
     vectors_in_problem = [[4,4,-2,0],[1,4,1,0], [5,-4,-7,1]]
     s4 = UpgradedMatrix(vectors_in_problem)
-    return s4.orthogonalization()
+    return s4.orthogonalization().tolist()
 
+print(solve_5())
 
-
-def solve_s6():
+def solve_6():
     np.set_printoptions(precision=3)
     m1 = UpgradedMatrix([[1,1,0],[0,1,1],[1,1,1],[1,0,1]])
     print(m1.expand_into_basis())
@@ -144,19 +144,23 @@ def solve_s6():
 
 
 def express_in(basis,vector):
-    basis,vector = np.array(basis), np.array(vector)
+    basis,vector = np.array(basis).T, np.array(vector).T
     res = np.linalg.solve(basis,vector)
+    res = np.round(res).astype(int)
     return res
 
 def solve_7():
     B = [[1,2,3],[0,1,2],[0,0,1]]
-    v1 = [0,1,0]
-    v2 = [0,0,1]
-    v3 = [7,3,2]
-    vn = [v1,v2,v3]
+    v1 = [1,0,0]
+    v2 = [0,1,0]
+    v3 = [0,0,1]
+    v4  = [7,3,2]
+    vn = [v1,v2,v3,v4]
     res = {}
     for i in vn:
-        res.append([i, express_in(B,i)])
+        # Converting lists to tuples because the keys
+        # in dictionary should be immutable
+        res[tuple(i)] = express_in(B,i).tolist()
     return res
 
 # S9: Form a change of basis matrix.
@@ -195,9 +199,10 @@ def solve_1():
 
     A = np.array([[-1, 4, 3], [1, 5, 3], [1, -1, -1],[-1,-2,-1],[2,7,4]]).T
     res = {}
-    res["image"] = image_basis(A)
-    res["kernel"] = kernel_basis(A)
+    res["image"] = "{"+', '.join([str(elem) + "^T" for elem in image_basis(A).T]) + "}"
+    res["kernel"] = "{"+', '.join([str(elem) + "^T" for elem in kernel_basis(A)]) + "}"
     return res
+
 
 
 # Problem2:
@@ -230,9 +235,25 @@ def solve_3():
     return res
 
 
-def random_problem():
-    number_task = random.randint(1, 10)
-    picture = "Math/problems/Problem{0}".format(number_task)
+def solve_problem(num):
+    if num == 1:
+        solve_1() # The output is the dictionaty with strings
+    elif num == 2:
+        solve_2()
+    elif num == 3:
+        solve_3()
+    elif num == 4:
+        solve_4()
+    elif num == 5:
+        solve_5()
+    elif num == 6:
+        solve_6()
+    elif num == 7:
+        solve_7() # Will show the picture
+    elif num == 8:
+        solve_8()
+
+
 
 
 

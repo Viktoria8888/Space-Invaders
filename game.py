@@ -84,7 +84,7 @@ class Game1:
         # Lives
         self.heart_image = pygame.image.load("resources/heart.png").convert_alpha()
         self.heart_image = pygame.transform.scale(self.heart_image, (40, 40))
-        self.lives = 0
+        self.lives = 3
         self.heart_spacing = 60
 
         # Enemies setup
