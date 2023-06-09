@@ -11,7 +11,8 @@ class PopupWindow:
         self.surface = pygame.Surface((self.width, self.height))
         self.surface.set_alpha(200)
         self.visible = False
-        self.new_window = AlgebraProblem()
+        self.new_window = AlgebraProblem(self.menu, True)
+
 
     def show(self):
         self.visible = True
@@ -44,28 +45,18 @@ class PopupWindow:
             button1.draw()
             button2.draw()
             for event in pygame.event.get():
-                if event.type == MOUSEBUTTONDOWN:
-                    if event.type == QUIT:
-                        self.hide()
-                        self.running = False
-
-                    elif button1.is_hovered():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if button1.is_hovered():
                         self.hide()  # Hide the current popup window
                         game_resumed = self.new_window.run()  # Assign the returned value to a variable
                         if game_resumed:  # Check if the game was resumed
                             self.game.resume_game()
-
-
                     elif button2.is_hovered():
                         self.menu.selected_game = None
                         self.hide()
-
                         self.running = False
                         self.menu.run()
-
-                if event.type == QUIT:
+                elif event.type == pygame.QUIT:
                     self.hide()
                     self.running = False
                     self.game.running = False
-
-

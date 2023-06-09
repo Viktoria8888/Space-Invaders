@@ -4,8 +4,12 @@ from Solutions import *
 
 
 class AlgebraProblem:
-    def __init__(self):
-        self.done = False
+    def __init__(self,menu,play_state):
+        self.menu = menu
+        self.play_state = play_state # if we are playing the game - True or just solving maths - False
+        self.reset()
+    def reset(self):
+
         self.surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
         # Chosing what algebra task to display
@@ -29,7 +33,7 @@ class AlgebraProblem:
         self.button2 = Button(self.surface, "Wrong", 60, "white" ,
                                WINDOW_WIDTH/2 +100, WINDOW_HEIGHT - 80)
         self.label_playes_lost = Label("Work on your algebra more then!",
-                                  60, (255, 226, 254), (WINDOW_WIDTH/2 -110,
+                                  60, (255, 226, 254), (400,
                                                           WINDOW_HEIGHT /2))
         self.label_playes_won = Label("Nice job!",
                                   100, (255, 226, 254), (WINDOW_WIDTH/2 -150,
@@ -43,8 +47,13 @@ class AlgebraProblem:
                                                           WINDOW_HEIGHT /2))
         self.solution_label3 = Label("",50,"black", (100,
                                                           WINDOW_HEIGHT /2+40))
-        self.comeback_to_game = Button(self.surface, "Resume game", 40, "white" ,
-                              100, WINDOW_HEIGHT - 40)
+        if self.play_state:
+            self.comeback_to_game = Button(self.surface, "Resume game", 40, "white" ,
+                                100, WINDOW_HEIGHT - 40)
+        else:
+            self.comeback_to_game = Button(self.surface, "Another problem", 40, "white" ,
+                                120, WINDOW_HEIGHT - 40)
+
         self.show_task = True
 
         self.selected_game = None
@@ -74,11 +83,9 @@ class AlgebraProblem:
             self.show_image = True
             self.show_task = False
 
-
-
         elif num == 8:
             sol = solve_8()
-            self.solution_label1.update_text( " ".join([str(i) for i in sol[0]]) )
+            self.solution_label1.update_text( " ".join([str(i) for i in sol[0]]))
             self.solution_label2.update_text( " ".join([str(i) for i in sol[1]]))
             self.solution_label3.update_text( " ".join([str(i) for i in sol[2]]))
 
@@ -96,6 +103,7 @@ class AlgebraProblem:
                     if self.button_sol.is_hovered():
                         self.show_sol_b = False
                         self.answer_showed = True
+
                         self.show_sol()
 
                     elif self.button1.is_hovered():
@@ -104,21 +112,27 @@ class AlgebraProblem:
 
                     elif self.button2.is_hovered():
                         self.clear_everything = True
-                        self.correct = False
+                        self.menu.run()
+                        running = False
+
                     elif self.comeback_to_game.is_hovered():
-                            self.done = True
-                            return True
+                            self.reset()
+                            if self.play_state:
+                                return True
 
 
             self.surface.fill((255,255,255))
+            if self.show_image:
+                img = pygame.image.load(os.path.join(math_dir, "sol7.png")).convert()
 
+                self.surface.blit(img, (100, 20))
             if not self.clear_everything:
                 self.hello_label.draw(self.surface)
                 # This picture was displayed incorrectly
                 if self.show_task:
                     if self.number_task == 7:
                         self.surface.blit(self.picture,(-10,  100))
-                    self.surface.blit(self.picture,(0,  100))
+                    self.surface.blit(self.picture,(50,  100))
                 if self.show_sol_b:
                     self.button_sol.draw()
                 if self.answer_showed:
@@ -138,10 +152,7 @@ class AlgebraProblem:
                     self.comeback_to_game.draw()
                 else:
                     self.label_playes_lost.draw(self.surface)
-            if self.show_image:
-                img = pygame.image.load(os.path.join(math_dir, "sol7.png")).convert()
 
-                self.surface.blit(img, (100, 20))
             pygame.display.flip()
 
         if self.selected_game is None:  # Check if the game was exited
