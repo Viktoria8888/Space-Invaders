@@ -4,7 +4,7 @@ from FireBar import FireBar
 from Enemy import Enemy
 from PopUpWindow import PopupWindow
 from Explosion import Explosion
-
+from SolveProblem import AlgebraProblem
 class Menu:
     def __init__(self):
         pygame.init()
@@ -18,7 +18,7 @@ class Menu:
 
         # Create buttons for each game option
         self.button1 = Button(self.surface, "Space invaders", 100, "white" ,WINDOW_WIDTH/2, WINDOW_HEIGHT/2 - 50)
-        self.button2 = Button(self.surface, "Settings", 100, "white" , WINDOW_WIDTH/2, WINDOW_HEIGHT/2 + 80)
+        self.button2 = Button(self.surface, "Play with algebra", 100, "white" , WINDOW_WIDTH/2, WINDOW_HEIGHT/2 + 80)
 
 
         self.selected_game = None  # Initialize selected game to None
@@ -38,7 +38,7 @@ class Menu:
                         self.selected_game = "Space invaders"
                         running = False
                     elif self.button2.is_hovered():
-                        self.selected_game = "Settings"
+                        self.selected_game = "Play with algebra"
                         running = False
 
             # Draw the menu
@@ -52,8 +52,8 @@ class Menu:
         if self.selected_game == "Space invaders":
             game = Game1(self.surface, self)
             game.run()
-        elif self.selected_game == "Settings":
-            game = Settings()
+        elif self.selected_game == "Play with algebra":
+            game = Algebra(self.surface,self)
             game.run()
 
         if self.selected_game is None:  # Check if the game was exited
@@ -124,12 +124,14 @@ class Game1:
                 self.enemies.remove(i)
 
     def pause_game(self):
+
+
         self.enemies_stopped = True
         self.user_movement_allowed = False
         for enemy in self.enemies:
             enemy.stop_moving()
-        self.popup.show()
-         # Show the popup window
+        self.popup.show()  # Show the popup window
+
 
     def resume_game(self):
         self.enemies_stopped = False
@@ -137,8 +139,8 @@ class Game1:
         for enemy in self.enemies:
             enemy.start_moving()
         self.lives = 3
-        self.remove_all_enemies_below() # so that there were no collision again with the ship
-        self.collision_logic()
+        #self.remove_all_enemies_below() # so that there were no collision again with the ship
+        self.explosion.reset()
 
     def draw_lives(self):
         for i in range(self.lives):
@@ -147,7 +149,7 @@ class Game1:
             self.surface.blit(self.heart_image, (x, y))
 
 
-    def collision_logic(self):
+    def collision_logic1(self):
         # Traversing the list of bullet objects and enemy objects then
         # checking one by one if the Euclidean distance is less than
         # some tolerance
@@ -166,11 +168,30 @@ class Game1:
                     if self.lives > 0:
                         self.lives -= 1
                         self.enemies.remove(enemy)
+    def collision_logic(self):
+        for enemy in self.enemies:
+            for bullet in self.ship.bullets:
+                if math.dist(bullet.coord, enemy.coord) < enemy.my_size[0] - 30:
+                    print("Bullet-Enemy collision detected!")  # Debug print
+                    self.enemies.remove(enemy)
+                    if bullet in self.ship.bullets:
+                        self.ship.bullets.remove(bullet)
+                    self.score += 1
+                    self.score_number_label.update_text(str(self.score))
+
+            if math.dist(self.ship.coord, enemy.coord) < enemy.my_size[0] - 30:
+                print("Ship-Enemy collision detected!")  # Debug print
+                if self.lives > 0:
+                    self.lives -= 1
+                    self.enemies.remove(enemy)
 
 
     def run(self):
         while self.running:
-        # Spawning the enemy every 2000 sec
+            # Collision checking
+            self.collision_logic()
+
+            # Spawning the enemy every 2000 sec
             current_time = pygame.time.get_ticks()
             elapsed_time = current_time - self.enemy_timer
 
@@ -191,6 +212,7 @@ class Game1:
                     elif event.key == pygame.K_SPACE and self.user_movement_allowed:
                         if self.fire_bar.allow_fire():
                             self.ship.fire_bullet()
+
                         self.fire_bar.fire_bullet()
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
@@ -199,6 +221,8 @@ class Game1:
                         self.ship.moving_right = False
                 elif event.type == pygame.QUIT:
                     self.running = False
+                    pygame.quit()  # Quit the pygame module
+                    sys.exit()
 
             # Ship on the screen
             self.surface.blit(self.background, (0, 0))
@@ -212,8 +236,6 @@ class Game1:
             # Rendering moving objects
             for enemy in self.enemies:
                 enemy.move()
-
-            for enemy in self.enemies:
                 enemy.draw()
 
             for bullet in self.ship.bullets:
@@ -225,26 +247,30 @@ class Game1:
 
             # Checking if the player lost
             if self.lives == 0:
-                if not self.explosion.update():
+                self.pause_game()
+                if (not self.explosion.update()):
                     explosion_x = self.ship.coord[0] + 100
                     explosion_y = self.ship.coord[1] + 100
                     self.explosion.draw(self.surface, explosion_x, explosion_y)
                     # Pausing the game in case if the user chooses an option to
                     # restore the lives
-                    self.pause_game()
+
 
             if self.enemies_stopped:
                 self.popup.draw(self.surface)
 
-            self.collision_logic()
             self.fire_bar.draw()
             pygame.display.flip()
 
 
 
-class Settings:
+class Algebra:
+    def __init__(self,surface, menu) -> None:
+        self.surface = surface
+        self.menu = menu
     def run(self):
-        print("hello")
+        AlgebraProblem(self.menu, False).run()
+
 
 game = Menu()
 game.run()
