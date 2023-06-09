@@ -41,11 +41,11 @@ class AlgebraProblem:
         self.clear_everything = False
         self.answer_showed = False
         self.correct = None
-        self.solution_label1 = Label("",50, "black", (100,
+        self.solution_label1 = Label("",50, "black", (WINDOW_WIDTH/3,
                                                           WINDOW_HEIGHT /2-40))
-        self.solution_label2 = Label("",50,"black", (100,
+        self.solution_label2 = Label("",50,"black", (WINDOW_WIDTH/3,
                                                           WINDOW_HEIGHT /2))
-        self.solution_label3 = Label("",50,"black", (100,
+        self.solution_label3 = Label("",50,"black", (WINDOW_WIDTH/3,
                                                           WINDOW_HEIGHT /2+40))
         if self.play_state:
             self.comeback_to_game = Button(self.surface, "Resume game", 40, "white" ,
@@ -122,7 +122,7 @@ class AlgebraProblem:
 
 
             self.surface.fill((255,255,255))
-            if self.show_image:
+            if self.show_image and (not self.clear_everything):
                 img = pygame.image.load(os.path.join(math_dir, "sol7.png")).convert()
 
                 self.surface.blit(img, (100, 20))

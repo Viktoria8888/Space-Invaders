@@ -8,7 +8,15 @@ from SolveProblem import AlgebraProblem
 class Menu:
     def __init__(self):
         pygame.init()
+        pygame.mixer.init()  # Initialize the mixer module.
+
         pygame.display.set_caption("Game Launcher")
+        self.menu_music = os.path.join(img_dir,"menu_music.mp3")
+        self.game1_music = os.path.join(img_dir,"music.mp3")
+
+        pygame.mixer.music.load(self.menu_music)  # Load your music file.
+        pygame.mixer.music.play(-1)
+
         self.surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT),pygame.HWSURFACE | pygame.DOUBLEBUF)
         self.background = pygame.image.load(os.path.join(img_dir,"menu_background.jpg")).convert()
         self.background = pygame.transform.scale(self.background, (WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -27,6 +35,8 @@ class Menu:
 
 
     def run(self):
+        pygame.mixer.music.load(self.menu_music)  # Load your music file.
+        pygame.mixer.music.play(-1)
         running = True
         while running:
             for event in pygame.event.get():
@@ -36,6 +46,8 @@ class Menu:
                     # Check if a button was clicked
                     if self.button1.is_hovered():
                         self.selected_game = "Space invaders"
+                        pygame.mixer.music.load(self.game1_music)
+                        pygame.mixer.music.play(-1)
                         running = False
                     elif self.button2.is_hovered():
                         self.selected_game = "Play with algebra"
@@ -53,7 +65,9 @@ class Menu:
             game = Game1(self.surface, self)
             game.run()
         elif self.selected_game == "Play with algebra":
+             # to resolve circular importfrom PopUpWindow import PopupWindow
             game = Algebra(self.surface,self)
+            pygame.mixer.music.stop()
             game.run()
 
         if self.selected_game is None:  # Check if the game was exited
@@ -65,6 +79,7 @@ class Menu:
 class Game1:
     def __init__(self, surface, menu):
         # Game screen setup
+
         self.menu = menu
         self.running = True
         self.surface = surface
@@ -80,17 +95,19 @@ class Game1:
         self.user_movement_allowed = True
         self.ship = Ship(self.surface, self.background)
 
-        # Lives
+        # Lives/winning
         self.heart_image = pygame.image.load(os.path.join(img_dir,"heart.png")).convert_alpha()
         self.heart_image = pygame.transform.scale(self.heart_image, (40, 40))
         self.lives = 3
         self.heart_spacing = 60
 
+        self.player_lost = True
+
         # Enemies setup
         self.enemy_timer = pygame.time.get_ticks()
         self.enemies = []
         self.enemies_stopped = False
-
+        self.spawn_time = 1500
         # Popup window setup (to restore lives)
         self.popup = PopupWindow(self.menu,self)
 
@@ -131,6 +148,7 @@ class Game1:
         for enemy in self.enemies:
             enemy.stop_moving()
         self.popup.show()  # Show the popup window
+        pygame.mixer.music.stop()
 
 
     def resume_game(self):
@@ -139,7 +157,14 @@ class Game1:
         for enemy in self.enemies:
             enemy.start_moving()
         self.lives = 3
-        #self.remove_all_enemies_below() # so that there were no collision again with the ship
+        self.remove_all_enemies_below() # so that there were no collision again with the ship
+        self.explosion.reset()
+
+    def reset_game(self):
+        self.enemies_stopped = False
+        self.user_movement_allowed = True
+        self.enemy = []
+        self.lives = 3
         self.explosion.reset()
 
     def draw_lives(self):
@@ -178,6 +203,16 @@ class Game1:
                         self.ship.bullets.remove(bullet)
                     self.score += 1
                     self.score_number_label.update_text(str(self.score))
+                    if self.score == 10 :
+                        self.spawn_time -=200
+                    if self.score == 15:
+                        self.spawn_time -=200
+                    if self.score == 25:
+                        self.spawn_time -=200
+
+                    if self.score == 10:
+                        self.player_lost = False
+
 
             if math.dist(self.ship.coord, enemy.coord) < enemy.my_size[0] - 30:
                 print("Ship-Enemy collision detected!")  # Debug print
@@ -195,7 +230,7 @@ class Game1:
             current_time = pygame.time.get_ticks()
             elapsed_time = current_time - self.enemy_timer
 
-            if elapsed_time >= 2000:
+            if elapsed_time >= self.spawn_time:
                 self.spawn_enemy()
                 self.enemy_timer = current_time
 
@@ -256,15 +291,20 @@ class Game1:
                     # restore the lives
 
 
-            if self.enemies_stopped:
-                self.popup.draw(self.surface)
+            if self.player_lost == False:
+                print("You won")
+                self.pause_game()
+                self.popup.draw_player_won(self.surface)
+
+            if self.player_lost == True:
+                self.popup.draw_player_lost(self.surface)
 
             self.fire_bar.draw()
             pygame.display.flip()
 
 
 
-class Algebra:
+class Algebra: # Creating this class here to avoid circular importing in the future
     def __init__(self,surface, menu) -> None:
         self.surface = surface
         self.menu = menu
