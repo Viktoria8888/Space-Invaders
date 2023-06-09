@@ -1,6 +1,6 @@
 from MODULES import *
 from Ship import *
-
+from FireBar import FireBar
 from Enemy import Enemy
 from PopUpWindow import PopupWindow
 from Explosion import Explosion
@@ -94,6 +94,9 @@ class Game1:
         # Popup window setup (to restore lives)
         self.popup = PopupWindow(self.menu,self)
 
+        # Firebar settup
+        self.fire_bar = FireBar(self.surface, 20, 20, 20, 200, (0, 255, 0), (255, 0, 0))
+
         # Explosion settup
         self.explosion_anim = []
         for i in range(5):
@@ -114,6 +117,10 @@ class Game1:
         if not self.enemies_stopped:
             new_enemy = Enemy(self.surface, self.background)
             self.enemies.append(new_enemy)
+    def remove_all_enemies_below(self):
+        for i in self.enemies:
+            if i.coord[1] < WINDOW_HEIGHT /2:
+                self.enemies.remove(i)
 
     def pause_game(self):
         self.enemies_stopped = True
@@ -122,6 +129,15 @@ class Game1:
             enemy.stop_moving()
         self.popup.show()
          # Show the popup window
+
+    def resume_game(self):
+        self.enemies_stopped = False
+        self.user_movement_allowed = True
+        for enemy in self.enemies:
+            enemy.start_moving()
+        self.lives = 3
+        self.remove_all_enemies_below() # so that there were no collision again with the ship
+        self.collision_logic()
 
     def draw_lives(self):
         for i in range(self.lives):
@@ -156,6 +172,8 @@ class Game1:
             # Spawning the enemy every 2000 sec
             current_time = pygame.time.get_ticks()
             elapsed_time = current_time - self.enemy_timer
+            self.fire_bar.update(elapsed_time)
+            self.fire_bar.draw()
             if elapsed_time >= 2000:
                 self.spawn_enemy()
                 self.enemy_timer = current_time
@@ -202,9 +220,8 @@ class Game1:
 
             # Checking if the player lost
             if self.lives == 0:
-                if self.explosion.update():
-                    self.surface.blit(self.explosion_anim[40],(self.ship.coord[0]-80, self.ship.coord[1]-50))
-                else:
+                if (not self.explosion.update()):
+
                     explosion_x = self.ship.coord[0] + 100
                     explosion_y = self.ship.coord[1] + 100
                     self.explosion.draw(self.surface, explosion_x, explosion_y)

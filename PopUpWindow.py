@@ -51,12 +51,15 @@ class PopupWindow:
 
                     elif button1.is_hovered():
                         self.hide()  # Hide the current popup window
-                        self.new_window.run()
+                        game_resumed = self.new_window.run()  # Assign the returned value to a variable
+                        if game_resumed:  # Check if the game was resumed
+                            self.game.resume_game()
 
 
                     elif button2.is_hovered():
                         self.menu.selected_game = None
                         self.hide()
+
                         self.running = False
                         self.menu.run()
 

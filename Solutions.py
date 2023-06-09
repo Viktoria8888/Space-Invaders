@@ -20,16 +20,24 @@ would be the most efficient to solve the problem
 This time all the comments to the code were written by myself :) """
 class UpgradedMatrix:
     def __init__(self, matrix):
-        self.matrix = np.array(matrix, dtype=float)
-        self.matrix_letters = np.array(matrix, dtype='object')#<-
+        if isinstance(matrix, list):
+            if any(isinstance(element, Symbol) for sublist in matrix for element in sublist):
+                self.matrix = np.array(matrix, dtype='object')
+            else:
+                self.matrix = np.array(matrix, dtype=float)
+        else:
+            self.matrix = matrix
 
-        self.sympy_matrix = Matrix(self.matrix_letters)
+        self.sympy_matrix = Matrix(self.matrix)
         if self.matrix.shape[0] == self.matrix.shape[1]:
             self.determinant = self.sympy_matrix.det()
 
     def is_invertible(self):
         # A matrix is invertible iff its determinant is not zero
-        return simplify(self.determinant) != 0
+        if self.sympy_matrix.has(Symbol):
+            return simplify(self.determinant) != 0
+        else:
+            return np.linalg.det(self.matrix) != 0
 
     def when_invertible(self, param):
         equation = Eq(self.determinant, 0)
@@ -120,8 +128,8 @@ def solve_4():
                 [0,0,x,1],
                 [1,0,0,1]])
     solution_real = m.when_invertible(x)
-    return set(map (lambda x: x %2, solution_real))
-
+    return list(set(map (lambda x: x %2, solution_real)))
+print(solve_4())
 
 
 
@@ -163,20 +171,21 @@ def solve_7():
         res[tuple(i)] = express_in(B,i).tolist()
     return res
 
-# S9: Form a change of basis matrix.
+# S8: Form a change of basis matrix.
 # https://math.stackexchange.com/questions/628061/how-to-construct-change-of-basis-matrix
 
 
 def solve_8():
-    b1 = [[1,1,1],[1,1,0],[1,0,0]]
-    b2 = [[1,1,1],[1,1,0],[1,0,0]]
+    b1 = [[1,0,0],[0,1,0],[0,0,1]]
+    b2 = [[1,1,0],[1,0,1],[0,1,1]]
     b3 = [[1,1,-1],[1,-1,1],[-1,1,1]]
     def transition_matrix(old_basis,new_basis):
         old_basis = np.array(old_basis).T
         new_basis = np.array(new_basis).T
         change_of_basis_matrix = np.linalg.inv(new_basis) @ old_basis
-        return change_of_basis_matrix
-
+        return change_of_basis_matrix.T
+    return transition_matrix(b1,b2).tolist()
+print(solve_8())
 #Problem1:
 #Podaj bazy obrazu i jądra przekształcenia liniowego FM : R5 → R3 zadanego przez macierz M :
 def solve_1():
@@ -210,7 +219,7 @@ def solve_1():
 # For S = LIN({v1,..vn}) and T = LIN({w1,..wn})
 # Find dim(S+T) and dim(S ∩ T)
 # We know that LIN(S U T) = LIN(S) + LIN(T) (was proved)
-def solve_2(self):
+def solve_2():
     v_S = Matrix([[3,0,3,3,2,0], [3,1,3,2,3,1]])
     v_T = Matrix([[1,1,1,0,3,1],[0,3,0,-3,-1,3]])
     # dimension of S and T
@@ -234,26 +243,10 @@ def solve_3():
 
     return res
 
-
-def solve_problem(num):
-    if num == 1:
-        solve_1() # The output is the dictionaty with strings
-    elif num == 2:
-        solve_2()
-    elif num == 3:
-        solve_3()
-    elif num == 4:
-        solve_4()
-    elif num == 5:
-        solve_5()
-    elif num == 6:
-        solve_6()
-    elif num == 7:
-        solve_7() # Will show the picture
-    elif num == 8:
-        solve_8()
-
-
+def pretty_string(matrix):
+    max_len = max([len(str(item)) for row in matrix for item in row])
+    string_matrix = ''.join(['|'.join([f"{str(item):>{max_len}} " for item in row]) for row in matrix])
+    return string_matrix
 
 
 

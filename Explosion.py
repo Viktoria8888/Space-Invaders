@@ -22,3 +22,8 @@ class Explosion:
         self.rect = self.image.get_rect(center=(x, y))
         # Draw the explosion on the given surface
         surface.blit(self.image, self.rect)
+
+    def reset(self):
+        # Reset the explosion animation
+        self.frame_index = 0
+        self.image = self.frames[self.frame_index]

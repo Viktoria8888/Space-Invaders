@@ -71,3 +71,6 @@ class Label:
 
     def draw(self, surface):
         surface.blit(self.text_obj, self.pos)
+
+    def update_pos(self, new_pos):
+        self.pos = new_pos

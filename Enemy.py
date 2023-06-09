@@ -67,3 +67,5 @@ class Enemy:
 
     def stop_moving(self):
         self.not_moving = True
+    def start_moving(self):
+        self.not_moving = False
