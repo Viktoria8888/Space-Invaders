@@ -9,15 +9,15 @@ import math
 WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 800
 
-SPEED = 20 # ships's walking speed
+ # ships's walking speed
 def AddVectors(v1,v2):
     return list(map(operator.add,v1,v2))
 
 DIRECTIONS = {
     "UP": [0, -10],
     "DOWN": [0, 0.5],
-    "RIGHT" : [0.75, 0],
-    "LEFT" : [-0.75, 0]
+    "RIGHT" : [0.85, 0],
+    "LEFT" : [-0.85, 0]
 }
 
 img_dir = os.path.join(os.path.dirname(__file__), 'resources')

@@ -95,7 +95,8 @@ class Game1:
         self.popup = PopupWindow(self.menu,self)
 
         # Firebar settup
-        self.fire_bar = FireBar(self.surface, 20, 20, 20, 200, (0, 255, 0), (255, 0, 0))
+        self.fire_bar = FireBar(self.surface, 20, 60, 20, 200, (0, 255, 0), (255, 0, 0), 10, 6000)
+
 
         # Explosion settup
         self.explosion_anim = []
@@ -169,11 +170,10 @@ class Game1:
 
     def run(self):
         while self.running:
-            # Spawning the enemy every 2000 sec
+        # Spawning the enemy every 2000 sec
             current_time = pygame.time.get_ticks()
             elapsed_time = current_time - self.enemy_timer
-            self.fire_bar.update(elapsed_time)
-            self.fire_bar.draw()
+
             if elapsed_time >= 2000:
                 self.spawn_enemy()
                 self.enemy_timer = current_time
@@ -189,7 +189,9 @@ class Game1:
                     elif event.key == pygame.K_RIGHT and self.user_movement_allowed:
                         self.ship.moving_right = True
                     elif event.key == pygame.K_SPACE and self.user_movement_allowed:
-                        self.ship.fire_bullet()
+                        if self.fire_bar.allow_fire():
+                            self.ship.fire_bullet()
+                        self.fire_bar.fire_bullet()
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
                         self.ship.moving_left = False
@@ -200,6 +202,7 @@ class Game1:
 
             # Ship on the screen
             self.surface.blit(self.background, (0, 0))
+            self.fire_bar.update()
             self.ship.update()
             self.ship.draw()
 
@@ -209,6 +212,8 @@ class Game1:
             # Rendering moving objects
             for enemy in self.enemies:
                 enemy.move()
+
+            for enemy in self.enemies:
                 enemy.draw()
 
             for bullet in self.ship.bullets:
@@ -220,8 +225,7 @@ class Game1:
 
             # Checking if the player lost
             if self.lives == 0:
-                if (not self.explosion.update()):
-
+                if not self.explosion.update():
                     explosion_x = self.ship.coord[0] + 100
                     explosion_y = self.ship.coord[1] + 100
                     self.explosion.draw(self.surface, explosion_x, explosion_y)
@@ -233,6 +237,7 @@ class Game1:
                 self.popup.draw(self.surface)
 
             self.collision_logic()
+            self.fire_bar.draw()
             pygame.display.flip()
 
 
