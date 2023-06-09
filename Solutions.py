@@ -130,7 +130,7 @@ def solve_5(): # Will show the picture with the solution, because the result num
     s4 = UpgradedMatrix(vectors_in_problem)
     return s4.orthogonalization().tolist()
 
-print(solve_5())
+
 
 def solve_6():
     np.set_printoptions(precision=3)

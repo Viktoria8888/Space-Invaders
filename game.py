@@ -1,7 +1,6 @@
 from MODULES import *
 from Ship import *
-from Labels import Label
-from Button import Button
+
 from Enemy import Enemy
 from PopUpWindow import PopupWindow
 from Explosion import Explosion
@@ -11,7 +10,7 @@ class Menu:
         pygame.init()
         pygame.display.set_caption("Game Launcher")
         self.surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT),pygame.HWSURFACE | pygame.DOUBLEBUF)
-        self.background = pygame.image.load("resources/menu_background.jpg").convert()
+        self.background = pygame.image.load(os.path.join(img_dir,"menu_background.jpg")).convert()
         self.background = pygame.transform.scale(self.background, (WINDOW_WIDTH, WINDOW_HEIGHT))
 
         # Create a label
@@ -69,7 +68,7 @@ class Game1:
         self.menu = menu
         self.running = True
         self.surface = surface
-        self.background = pygame.image.load("resources/background.jpg").convert()
+        self.background = pygame.image.load(os.path.join(img_dir,"background.jpg")).convert()
         self.background = pygame.transform.scale(self.background, (WINDOW_WIDTH, WINDOW_HEIGHT))
 
         # Score label
@@ -82,7 +81,7 @@ class Game1:
         self.ship = Ship(self.surface, self.background)
 
         # Lives
-        self.heart_image = pygame.image.load("resources/heart.png").convert_alpha()
+        self.heart_image = pygame.image.load(os.path.join(img_dir,"heart.png")).convert_alpha()
         self.heart_image = pygame.transform.scale(self.heart_image, (40, 40))
         self.lives = 3
         self.heart_spacing = 60
@@ -99,7 +98,7 @@ class Game1:
         self.explosion_anim = []
         for i in range(5):
             filename = "regularExplosion0{}.png".format(i)
-            img = pygame.image.load("resources/explosions/{0}".format(filename)).convert_alpha()
+            img = pygame.image.load(os.path.join(img_dir,"explosions/{0}".format(filename))).convert_alpha()
 
             img_lg = pygame.transform.scale(img, (350, 350))
             # I wanted to extend the time of my animation of the
@@ -224,7 +223,7 @@ class Game1:
 class Settings:
     def run(self):
         print("hello")
-if __name__ == "__main__":
-    game = Menu()
-    game.run()
+
+game = Menu()
+game.run()
 

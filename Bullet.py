@@ -5,7 +5,7 @@ class Bullet:
         self.back_picture = back_picture
         self.coord = coord
         self.bullet_size = (50,50)
-        self.bullet_image = pygame.image.load("resources/bullet.png").convert_alpha()
+        self.bullet_image = pygame.image.load(os.path.join(img_dir,"bullet.png")).convert_alpha()
         self.bullet_image = pygame.transform.scale(self.bullet_image, self.bullet_size)
 
         self.speed = 5

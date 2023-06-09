@@ -1,6 +1,6 @@
-from Labels import Label
+
 from MODULES import *
-from Math.Solutions import solve_problem
+from Solutions import solve_problem
 def random_problem():
     number_task = random.randint(1, 8)
     picture = "Math/problems/Problem{0}".format(number_task)
@@ -13,7 +13,7 @@ class AlgebraProblem:
         # Chosing what algebra task to display
         # There is some problem with problem 6
         self.number_task = random.randint(1,8)
-        self.picture =  pygame.image.load("Math/problems/Problem{0}.png".format(self.number_task))
+        self.picture =  pygame.image.load(os.path.join(math_dir,"Problem{0}.png".format(self.number_task))).convert()
         #self.picture = pygame.transform.scale(self.picture, (WINDOW_WIDTH, WINDOW_HEIGHT/3))
         # Create a label
         self.hello_label = Label("Problem № {0}".format(self.number_task),

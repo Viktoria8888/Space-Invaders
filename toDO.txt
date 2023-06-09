@@ -1,2 +1,0 @@
-1) Gaussian elimination
-2) add 5 algebra tasks (solve by the way)

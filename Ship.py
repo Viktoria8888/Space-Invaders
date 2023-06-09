@@ -5,7 +5,7 @@ class Ship:
         self.parent_screen = surface
         self.back_picture = back_picture
         self.my_size = (140,140)
-        image = pygame.image.load("resources/ship1.png").convert_alpha()
+        image = pygame.image.load(os.path.join(img_dir,"ship1.png")).convert_alpha()
         self.block = pygame.transform.scale(image, self.my_size)
 
         self.coord = [WINDOW_WIDTH/2,WINDOW_HEIGHT-150]
