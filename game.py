@@ -224,7 +224,7 @@ class Game1:
 class Settings:
     def run(self):
         print("hello")
+if __name__ == "__main__":
+    game = Menu()
+    game.run()
 
-game = Menu()
-game.run()
-input()
