@@ -21,8 +21,11 @@ class Menu:
         self.button1 = Button(self.surface, "Space invaders", 100, "white" ,WINDOW_WIDTH/2, WINDOW_HEIGHT/2 - 50)
         self.button2 = Button(self.surface, "Settings", 100, "white" , WINDOW_WIDTH/2, WINDOW_HEIGHT/2 + 80)
 
+
         self.selected_game = None  # Initialize selected game to None
         self.popup_visible = False  # Flag to control popup visibility
+
+
 
     def run(self):
         running = True
