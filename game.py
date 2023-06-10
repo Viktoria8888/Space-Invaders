@@ -242,6 +242,7 @@ class Game1:
     def run(self):
         # Music background
         self.music()
+        clock = pygame.time.Clock()
         while self.running:
 
             # Collision checking
@@ -329,6 +330,8 @@ class Game1:
                 self.popup.draw_player_lost(self.surface)
 
             pygame.display.flip()
+            clock.tick(500) # To ensure that frames updated at the
+                            # same rate on every machine
 
 
 class Algebra:

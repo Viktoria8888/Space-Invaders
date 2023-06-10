@@ -16,6 +16,8 @@ class Bullet:
 
     def move(self):
         x, y = self.coord
+        # Subtracting from y because in pygame the start of
+        # coordinate system is at the top left corner
         y -= self.speed
 
         self.coord = (x, y)

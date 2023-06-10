@@ -32,13 +32,6 @@ class Ship:
         self.coord = AddVectors(self.coord, DIRECTIONS["RIGHT"])
         self.draw()
 
-    def move_up(self):
-        self.coord = AddVectors(self.coord, DIRECTIONS["UP"])
-        self.draw()
-
-    def move_down(self):
-        self.coord = AddVectors(self.coord, DIRECTIONS["DOWN"])
-        self.draw()
 
     def fire_bullet(self):
         x = self.coord[0] + self.my_size[0] / 2 - 25
