@@ -1,9 +1,4 @@
----
-title: Project OOP
----
-**Author: Wiktoria Kaszpruk (Viktoriia Kashpruk)
-Index:    337014**
-Date: 10.06.23
+
 ## Programming project for OOP course
 ### UML Diagram:
 ![](https://hackmd.io/_uploads/BJ8HHyfPh.png)
