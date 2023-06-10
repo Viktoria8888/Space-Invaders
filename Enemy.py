@@ -43,8 +43,7 @@ class Enemy:
         else:
             self.moving_down = False
 
-    # Thanks to ChatGpt(although the problem wasn't entirely resolved
-    # and I have no clue where the its root lies)
+    # Thanks to ChatGpt
     # "Why when the ship starts to move the enemies start to slow down?
     # "Is my updated() wrong?"
     def update(self):
