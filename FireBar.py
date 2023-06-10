@@ -1,3 +1,4 @@
+# Author: Wiktoria Kaszpruk (Viktoriia Kashpruk)
 import pygame
 
 class FireBar:

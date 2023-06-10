@@ -1,9 +1,9 @@
+# Author: Wiktoria Kaszpruk (Viktoriia Kashpruk)
 import pygame
 from pygame.locals import *
 import operator
 import sys
 import os
-
 import random
 import math
 WINDOW_WIDTH = 1200

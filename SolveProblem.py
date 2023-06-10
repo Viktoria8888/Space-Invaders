@@ -1,4 +1,4 @@
-
+# Author: Wiktoria Kaszpruk (Viktoriia Kashpruk)
 from MODULES import *
 from Solutions import *
 

@@ -1,3 +1,4 @@
+# Author: Wiktoria Kaszpruk (Viktoriia Kashpruk)
 import numpy as np
 from sympy import *
 import random

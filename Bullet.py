@@ -1,5 +1,5 @@
+# Author: Wiktoria Kaszpruk (Viktoriia Kashpruk)
 from MODULES import *
-
 
 class Bullet:
     def __init__(self, surface, back_picture, coord):

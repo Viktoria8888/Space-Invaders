@@ -1,3 +1,4 @@
+# Author: Wiktoria Kaszpruk (Viktoriia Kashpruk)
 from MODULES import *
 
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# Author: Wiktoria Kaszpruk (Viktoriia Kashpruk)
 from MODULES import *
 from Ship import *
 from FireBar import FireBar
