@@ -16,8 +16,8 @@ def AddVectors(v1,v2):
 DIRECTIONS = {
     "UP": [0, -10],
     "DOWN": [0, 0.5],
-    "RIGHT" : [0.85, 0],
-    "LEFT" : [-0.85, 0]
+    "RIGHT" : [0.95, 0],
+    "LEFT" : [-0.95, 0]
 }
 
 img_dir = os.path.join(os.path.dirname(__file__), 'resources')

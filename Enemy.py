@@ -1,4 +1,6 @@
 from MODULES import *
+
+
 class Enemy:
     def __init__(self, surface, back_picture, speed=1):
         self.surface = surface
@@ -7,10 +9,16 @@ class Enemy:
         image = pygame.image.load("resources/enemy.png").convert_alpha()
         self.block = pygame.transform.scale(image, self.my_size)
 
-        self.coord = (0, 30)
+        # Randomly decide the initial x coordinate and movement direction
+        if random.random() < 0.5:
+            self.coord = (0, 30)
+            self.moving_right = True
+            self.moving_left = False
+        else:
+            self.coord = (WINDOW_WIDTH - self.my_size[0], 30)
+            self.moving_right = False
+            self.moving_left = True
 
-        self.moving_left = False
-        self.moving_right = False
         self.moving_down = False
         self.not_moving = False
 
@@ -35,8 +43,11 @@ class Enemy:
         else:
             self.moving_down = False
 
+    # Thanks to ChatGpt(although the problem wasn't entirely resolved
+    # and I have no clue where the its root lies)
+    # "Why when the ship starts to move the enemies start to slow down?
+    # "Is my updated() wrong?"
     def update(self):
-
         if self.moving_left and not self.not_moving:
             self.move_left()
         elif self.moving_right and not self.not_moving:

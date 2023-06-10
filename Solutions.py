@@ -16,8 +16,9 @@ Actually, thanks to those modules Python became so popular and frequently used i
 That is why in the code below I will be using those 2 modules to help me to solve some linear algebra problems
 from the first part of the algebra exam
 I used ChatGpt to guide me through numpy methods and math algorithms that
-would be the most efficient to solve the problem
-This time all the comments to the code were written by myself :) """
+would be the most efficient to solve the problem"""
+
+
 class UpgradedMatrix:
     def __init__(self, matrix):
         if isinstance(matrix, list):
@@ -49,12 +50,15 @@ class UpgradedMatrix:
         self.matrix[0] = self.matrix[0] / np.linalg.norm(self.matrix[0])
         n = self.matrix.shape[0]
         for i in range(1, n):
-            orthogonal_sum = sum(np.dot(self.matrix[i], self.matrix[j]) * self.matrix[j] for j in range(i))
+            orthogonal_sum = sum(
+                np.dot(self.matrix[i], self.matrix[j]) * self.matrix[j] for j in range(i))
             self.matrix[i] -= orthogonal_sum
-            if np.dot(self.matrix[i], self.matrix[i]) > 1e-10:  # Check for non-zero vector
-                self.matrix[i] = self.matrix[i] / np.linalg.norm(self.matrix[i])
+            # Check for non-zero vector
+            if np.dot(self.matrix[i], self.matrix[i]) > 1e-10:
+                self.matrix[i] = self.matrix[i] / \
+                    np.linalg.norm(self.matrix[i])
             else:
-                return i # index of the linearly dependent vector
+                return i  # index of the linearly dependent vector
                 # Although I don't take into the account that
                 # there are more linearly dependent vectors
 
@@ -70,14 +74,14 @@ class UpgradedMatrix:
 
     def if_linearly_independent(self):
         rank = np.linalg.matrix_rank(self.matrix)
-        return rank==len(self.matrix)
+        return rank == len(self.matrix)
 
     def return_lin_dependent(self):
         func_call = self.orthogonalization()
         if type(func_call) == int:
             return func_call
         else:
-            return False #if the set is linearly independent
+            return False  # if the set is linearly independent
 
     # To expand into the basis first we have to remove the independent vectors
     # We can do it by orthogonalization to see what vectors end up as a zero vector.
@@ -88,7 +92,6 @@ class UpgradedMatrix:
         if not self.if_linearly_independent():
             i = self.return_lin_dependent()
             self.matrix = np.delete(self.matrix, i, axis=0)
-
 
         n = self.matrix.shape[1]
         # Current number of basis vectors
@@ -114,6 +117,7 @@ class UpgradedMatrix:
     # 3) All the eigenvalues are positive
     # Use the third approach because Cholesky method doesn't take into account if
     # the matrix is semi-definite (or when one of the determinants of a minor is equal to 0)
+
     def if_positive_definite(self):
         if self.is_symmetric():
             eigenvalues = np.linalg.eigvalsh(self.matrix)
@@ -123,52 +127,54 @@ class UpgradedMatrix:
 
 def solve_4():
     x = symbols('x')
-    m = UpgradedMatrix([[1,x,1,x],
-                [1,1,1,1],
-                [0,0,x,1],
-                [1,0,0,1]])
+    m = UpgradedMatrix([[1, x, 1, x],
+                        [1, 1, 1, 1],
+                        [0, 0, x, 1],
+                        [1, 0, 0, 1]])
     solution_real = m.when_invertible(x)
-    return list(set(map (lambda x: x %2, solution_real)))
+    return list(set(map(lambda x: x % 2, solution_real)))
+
+
 print(solve_4())
 
 
-
-def solve_5(): # Will show the picture with the solution, because the result numbers
-    vectors_in_problem = [[4,4,-2,0],[1,4,1,0], [5,-4,-7,1]]
+def solve_5():  # Will show the picture with the solution, because the result numbers
+    vectors_in_problem = [[4, 4, -2, 0], [1, 4, 1, 0], [5, -4, -7, 1]]
     s4 = UpgradedMatrix(vectors_in_problem)
     return s4.orthogonalization().tolist()
 
 
-
 def solve_6():
     np.set_printoptions(precision=3)
-    m1 = UpgradedMatrix([[1,1,0],[0,1,1],[1,1,1],[1,0,1]])
+    m1 = UpgradedMatrix([[1, 1, 0], [0, 1, 1], [1, 1, 1], [1, 0, 1]])
     print(m1.expand_into_basis())
-    m2 = UpgradedMatrix([[0,1,2],[1,1,1],[1,1,1]])
-    m3 = UpgradedMatrix([[1,0,1,0],[1,2,0,1],[0,2,1,1],[0,0,1,1]])
-    #print(m3.if_linearly_independent())
-    m4 = UpgradedMatrix([[1,0,1,0],[0,2,0,2],[0,0,2,1]])
-    #print(m1.expand_into_basis())
+    m2 = UpgradedMatrix([[0, 1, 2], [1, 1, 1], [1, 1, 1]])
+    m3 = UpgradedMatrix([[1, 0, 1, 0], [1, 2, 0, 1],
+                        [0, 2, 1, 1], [0, 0, 1, 1]])
+    # print(m3.if_linearly_independent())
+    m4 = UpgradedMatrix([[1, 0, 1, 0], [0, 2, 0, 2], [0, 0, 2, 1]])
+    # print(m1.expand_into_basis())
 
 
-def express_in(basis,vector):
-    basis,vector = np.array(basis).T, np.array(vector).T
-    res = np.linalg.solve(basis,vector)
+def express_in(basis, vector):
+    basis, vector = np.array(basis).T, np.array(vector).T
+    res = np.linalg.solve(basis, vector)
     res = np.round(res).astype(int)
     return res
 
+
 def solve_7():
-    B = [[1,2,3],[0,1,2],[0,0,1]]
-    v1 = [1,0,0]
-    v2 = [0,1,0]
-    v3 = [0,0,1]
-    v4  = [7,3,2]
-    vn = [v1,v2,v3,v4]
+    B = [[1, 2, 3], [0, 1, 2], [0, 0, 1]]
+    v1 = [1, 0, 0]
+    v2 = [0, 1, 0]
+    v3 = [0, 0, 1]
+    v4 = [7, 3, 2]
+    vn = [v1, v2, v3, v4]
     res = {}
     for i in vn:
         # Converting lists to tuples because the keys
         # in dictionary should be immutable
-        res[tuple(i)] = express_in(B,i).tolist()
+        res[tuple(i)] = express_in(B, i).tolist()
     return res
 
 # S8: Form a change of basis matrix.
@@ -176,18 +182,23 @@ def solve_7():
 
 
 def solve_8():
-    b1 = [[1,0,0],[0,1,0],[0,0,1]]
-    b2 = [[1,1,0],[1,0,1],[0,1,1]]
-    b3 = [[1,1,-1],[1,-1,1],[-1,1,1]]
-    def transition_matrix(old_basis,new_basis):
+    b1 = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+    b2 = [[1, 1, 0], [1, 0, 1], [0, 1, 1]]
+    b3 = [[1, 1, -1], [1, -1, 1], [-1, 1, 1]]
+
+    def transition_matrix(old_basis, new_basis):
         old_basis = np.array(old_basis).T
         new_basis = np.array(new_basis).T
         change_of_basis_matrix = np.linalg.inv(new_basis) @ old_basis
         return change_of_basis_matrix.T
-    return transition_matrix(b1,b2).tolist()
+    return transition_matrix(b1, b2).tolist()
+
+
 print(solve_8())
-#Problem1:
-#Podaj bazy obrazu i jądra przekształcenia liniowego FM : R5 → R3 zadanego przez macierz M :
+# Problem1:
+# Podaj bazy obrazu i jądra przekształcenia liniowego FM : R5 → R3 zadanego przez macierz M :
+
+
 def solve_1():
     def image_basis(matrix):
         # Compute the Reduced Row Echelon Form (RREF) and the pivot columns
@@ -204,14 +215,14 @@ def solve_1():
         nullspace_basis = [list(vector) for vector in basis]
         return nullspace_basis
 
-
-
-    A = np.array([[-1, 4, 3], [1, 5, 3], [1, -1, -1],[-1,-2,-1],[2,7,4]]).T
+    A = np.array([[-1, 4, 3], [1, 5, 3], [1, -1, -1],
+                 [-1, -2, -1], [2, 7, 4]]).T
     res = {}
-    res["image"] = "{"+', '.join([str(elem) + "^T" for elem in image_basis(A).T]) + "}"
-    res["kernel"] = "{"+', '.join([str(elem) + "^T" for elem in kernel_basis(A)]) + "}"
+    res["image"] = "{"+', '.join([str(elem) +
+                                 "^T" for elem in image_basis(A).T]) + "}"
+    res["kernel"] = "{"+', '.join([str(elem) +
+                                  "^T" for elem in kernel_basis(A)]) + "}"
     return res
-
 
 
 # Problem2:
@@ -220,8 +231,8 @@ def solve_1():
 # Find dim(S+T) and dim(S ∩ T)
 # We know that LIN(S U T) = LIN(S) + LIN(T) (was proved)
 def solve_2():
-    v_S = Matrix([[3,0,3,3,2,0], [3,1,3,2,3,1]])
-    v_T = Matrix([[1,1,1,0,3,1],[0,3,0,-3,-1,3]])
+    v_S = Matrix([[3, 0, 3, 3, 2, 0], [3, 1, 3, 2, 3, 1]])
+    v_T = Matrix([[1, 1, 1, 0, 3, 1], [0, 3, 0, -3, -1, 3]])
     # dimension of S and T
     dim_S = v_S.rank()
     dim_T = v_T.rank()
@@ -232,21 +243,23 @@ def solve_2():
     dim_S_inter_T = dim_S + dim_T - dim_S_plus_T
     return [dim_S_plus_T, dim_S_inter_T]
 
-def solve_3():
-    m1 = UpgradedMatrix([[1,2,0],[-2,2,0],[0,0,1]])
-    m2 = UpgradedMatrix([[2,2,0],[2,2,0],[0,0,1]])
-    m3 = UpgradedMatrix([[6,2,4],[2,1,1],[4,1,5]])
-    m4 = UpgradedMatrix([[6,7,3,3],[7,15,7,3],[3,7,11,1],[3,3,1,2]])
 
-    matrices = [m1, m2, m3, m4] # Create a list of matrices
-    res = [m.if_positive_definite() for m in matrices] # Check if each matrix is positive definite
+def solve_3():
+    m1 = UpgradedMatrix([[1, 2, 0], [-2, 2, 0], [0, 0, 1]])
+    m2 = UpgradedMatrix([[2, 2, 0], [2, 2, 0], [0, 0, 1]])
+    m3 = UpgradedMatrix([[6, 2, 4], [2, 1, 1], [4, 1, 5]])
+    m4 = UpgradedMatrix([[6, 7, 3, 3], [7, 15, 7, 3],
+                        [3, 7, 11, 1], [3, 3, 1, 2]])
+
+    matrices = [m1, m2, m3, m4]  # Create a list of matrices
+    # Check if each matrix is positive definite
+    res = [m.if_positive_definite() for m in matrices]
 
     return res
 
+
 def pretty_string(matrix):
     max_len = max([len(str(item)) for row in matrix for item in row])
-    string_matrix = ''.join(['|'.join([f"{str(item):>{max_len}} " for item in row]) for row in matrix])
+    string_matrix = ''.join(
+        ['|'.join([f"{str(item):>{max_len}} " for item in row]) for row in matrix])
     return string_matrix
-
-
-

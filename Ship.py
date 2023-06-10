@@ -14,10 +14,8 @@ class Ship:
         self.moving_left = False
         self.moving_right = False
 
-        # Ready - 0 You can't see the bullet on the screen.
-        # Fire  - 1 The bullet is currently moving
         self.bullets = []
-        self.bullet_state = False
+
 
 
     def update(self):
@@ -25,8 +23,6 @@ class Ship:
             self.move_left()
         elif self.moving_right:
             self.move_right()
-
-
 
     def move_left(self):
         self.coord = AddVectors(self.coord, DIRECTIONS["LEFT"])
@@ -52,6 +48,7 @@ class Ship:
 
 
     def draw(self):
+
         self.parent_screen.blit(self.back_picture, (0, 0))
         if self.coord[0] + self.my_size[0]/2 < 0:
             self.coord[0] = WINDOW_WIDTH - self.my_size[0]
